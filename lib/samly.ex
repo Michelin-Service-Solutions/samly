@@ -18,12 +18,13 @@ defmodule Samly do
   - conn: Plug connection
   """
   @spec get_active_assertion(Conn.t()) :: Assertion.t()
-  def get_active_assertion(conn) do
-    nameid = conn |> Conn.get_session("samly_nameid")
+  def get_active_assertion(conn, state \\ Application.get_env(:samly, :state_provider, State.Ets)) do
+    case state.get(conn, "samly_assertion") do
+      {_, %Assertion{} = assertion} ->
+        assertion
 
-    case State.get_by_nameid(nameid) do
-      {^nameid, saml_assertion} -> saml_assertion
-      _ -> nil
+      _ ->
+        nil
     end
   end
 

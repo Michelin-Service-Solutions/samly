@@ -16,16 +16,11 @@ defmodule Samly.SPHandler do
     metadata = Helper.sp_metadata(sp)
 
     conn
-    |> put_resp_header("Content-Type", "text/xml")
+    |> put_resp_header("content-type", "text/xml")
     |> send_resp(200, metadata)
-
-    # rescue
-    #   error ->
-    #     Logger.error("#{inspect error}")
-    #     conn |> send_resp(500, "request_failed")
   end
 
-  def consume_signin_response(conn) do
+  def consume_signin_response(conn, state \\ Application.get_env(:samly, :state_provider, State.Ets)) do
     %IdpData{id: idp_id} = idp = conn.private[:samly_idp]
     %IdpData{pre_session_create_pipeline: pipeline, esaml_sp_rec: sp_rec} = idp
     sp = ensure_sp_uris_set(sp_rec, conn)
@@ -44,23 +39,17 @@ defmodule Samly.SPHandler do
 
       # TODO: use idp_id + nameid
       nameid = assertion.subject.name
-      State.put(nameid, assertion)
       target_url = auth_target_url(conn, assertion, relay_state)
 
       conn
       |> configure_session(renew: true)
-      |> put_session("samly_nameid", nameid)
+      |> state.put({"samly_assertion", nameid}, assertion)
       |> redirect(302, target_url |> URI.decode_www_form())
     else
       {:halted, conn} -> conn
       {:error, reason} -> conn |> send_resp(403, "access_denied #{inspect(reason)}")
       _ -> conn |> send_resp(403, "access_denied")
     end
-
-    # rescue
-    #   error ->
-    #     Logger.error("#{inspect error}")
-    #     conn |> send_resp(500, "request_failed")
   end
 
   # IDP-initiated flow auth response
@@ -137,15 +126,10 @@ defmodule Samly.SPHandler do
     else
       error -> conn |> send_resp(403, "invalid_request #{inspect(error)}")
     end
-
-    # rescue
-    #   error ->
-    #     Logger.error("#{inspect error}")
-    #     conn |> send_resp(500, "request_failed")
   end
 
   # non-ui logout request from IDP
-  def handle_logout_request(conn) do
+  def handle_logout_request(conn, state \\ Application.get_env(:samly, :state_provider, State.Ets)) do
     %IdpData{id: idp_id} = idp = conn.private[:samly_idp]
     %IdpData{esaml_idp_rec: idp_rec, esaml_sp_rec: sp_rec} = idp
     sp = ensure_sp_uris_set(sp_rec, conn)
@@ -155,18 +139,13 @@ defmodule Samly.SPHandler do
     relay_state = conn.body_params["RelayState"]
 
     with {:ok, payload} <- Helper.decode_idp_signout_req(sp, saml_encoding, saml_request) do
-      # nameid = Esaml.esaml_logoutreq(payload, :name)
-      # issuer = Esaml.esaml_logoutreq(payload, :issuer)
       Esaml.esaml_logoutreq(name: nameid, issuer: _issuer) = payload
-
       return_status =
-        case State.get_by_nameid(nameid) do
+        case state.get(conn, "samly_assertion") do
           {^nameid, %Assertion{idp_id: ^idp_id}} ->
-            State.delete(nameid)
             :success
 
           {^nameid, _saml_assertion} ->
-            State.delete(nameid)
             :denied
 
           _ ->
@@ -176,6 +155,7 @@ defmodule Samly.SPHandler do
       {idp_signout_url, resp_xml_frag} = Helper.gen_idp_signout_resp(sp, idp_rec, return_status)
 
       conn
+      |> state.delete("samly_assertion")
       |> configure_session(drop: true)
       |> send_saml_request(idp_signout_url, idp.use_redirect_for_req, resp_xml_frag, relay_state)
     else
@@ -191,10 +171,5 @@ defmodule Samly.SPHandler do
           relay_state
         )
     end
-
-    # rescue
-    #   error ->
-    #     Logger.error("#{inspect error}")
-    #     conn |> send_resp(500, "request_failed")
   end
 end
