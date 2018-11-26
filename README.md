@@ -198,6 +198,22 @@ config :samly, Samly.Provider,
 | `allow_idp_initiated_flow` | _(optional)_ Default is `false`. IDP initiated SSO is allowed only when this is set to `true`. |
 | `allowed_target_urls` | _(optional)_ Default is `[]`. `Samly` uses this **only** when `allow_idp_initiated_flow` parameter is set to `true`. Make sure to set this to one or more exact URLs you want to allow (whitelist). The URL to redirect the user after completing the SSO flow is sent from IDP in auth response as `relay_state`. This `relay_state` target URL is matched against this URL list. Set the value to `nil` if you do not want this whitelist capability.  |
 
+## Assertion State
+
+This package supports configuration of Assertion State implementations. Currently there are two provided by the package:
+
+1. `State.Ets` - State is stored in ETS table (default). 
+1. `State.Conn` - State is stored in `Plug.Conn.Session`, which allows it to be shared among nodes in the cluster in a stateless fashion.
+
+The behaviour implementation can be set in the Application config:
+
+```
+# config/config.exs
+
+config :samly, 
+  :state_provider, Samly.State.Conn
+```
+
 ## SAML Assertion
 
 Once authentication is completed successfully, IdP sends a "consume" SAML

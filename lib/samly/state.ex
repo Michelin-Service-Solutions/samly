@@ -1,28 +1,26 @@
 defmodule Samly.State do
-  @moduledoc false
+  @moduledoc """
+  This behaviour defines the interface for accessing, updating and deleting the saml assertion for the given nameid
+  """
 
-  def init() do
-    if :ets.info(:esaml_nameids) == :undefined do
-      :ets.new(:esaml_nameids, [:set, :public, :named_table])
-    end
-  end
+  alias Plug.Conn
+  alias Samly.Assertion
+
+  @type session_key :: binary()
+  @type name_id :: binary()
+  @type assertion_key :: {session_key(), name_id()}
+
+  @callback init() :: no_return()
+
+  @callback get(Conn.t(), session_key()) :: {name_id(), Assertion.t()}
+
+  @callback put(Conn.t(), assertion_key(), Assertion.t()) :: Conn.t()
+
+  @callback delete(Conn.t(), session_key()) :: Conn.t()
 
   def gen_id() do
-    24 |> :crypto.strong_rand_bytes() |> Base.url_encode64()
-  end
-
-  def get_by_nameid(nameid) do
-    case :ets.lookup(:esaml_nameids, nameid) do
-      [{_nameid, _saml_assertion} = rec] -> rec
-      _ -> nil
-    end
-  end
-
-  def put(nameid, saml_assertion) do
-    :ets.insert(:esaml_nameids, {nameid, saml_assertion})
-  end
-
-  def delete(nameid) do
-    :ets.delete(:esaml_nameids, nameid)
+    24
+    |> :crypto.strong_rand_bytes()
+    |> Base.url_encode64()
   end
 end

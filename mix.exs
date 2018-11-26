@@ -15,7 +15,9 @@ defmodule Samly.Mixfile do
       package: package(),
       elixir: "~> 1.5",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [coveralls: :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test]
     ]
   end
 
@@ -33,7 +35,8 @@ defmodule Samly.Mixfile do
       {:esaml, "~> 3.6"},
       {:sweet_xml, "~> 0.6"},
       {:ex_doc, "~> 0.18", only: :dev},
-      {:inch_ex, "~> 0.5", only: :docs}
+      {:inch_ex, "~> 0.5", only: :docs},
+      {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 

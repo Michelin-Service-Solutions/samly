@@ -26,12 +26,12 @@ defmodule Samly.Provider do
 
   @doc false
   def start_link(gs_opts \\ []) do
-    GenServer.start_link(__MODULE__, [], gs_opts)
+    GenServer.start_link(__MODULE__, Application.get_env(:samly, :state_provider, State.Ets), gs_opts)
   end
 
   @doc false
-  def init([]) do
-    State.init()
+  def init(state) do
+    state.init()
     opts = Application.get_env(:samly, Samly.Provider, [])
 
     # must be done prior to loading the providers

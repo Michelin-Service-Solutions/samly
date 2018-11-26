@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [Unreleased]
+### Changed
+- Refactor State interface.
+- State is now a behaviour with ETS and Conn backed implementations.
+
 ### v0.9.3
 
 +   Uptake `esaml` v3.6.0 that includes fixes for schema validation errors.
