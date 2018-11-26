@@ -1,10 +1,9 @@
 defmodule Samly.Mixfile do
   use Mix.Project
 
-  @version "0.9.3"
-  @description "SAML SP SSO made easy"
-  @source_url "https://github.com/handnot2/samly"
-  @blog_url "https://handnot2.github.io/blog/auth/saml-auth-for-phoenix"
+  @version "1.0.0"
+  @description "SAML SP SSO made easy - Decisiv fork"
+  @source_url "https://github.com/Decisiv/samly"
 
   def project() do
     [
@@ -55,8 +54,7 @@ defmodule Samly.Mixfile do
       files: ["config", "lib", "LICENSE", "mix.exs", "README.md"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => @source_url,
-        "Blog" => @blog_url
+        "GitHub" => @source_url
       }
     ]
   end

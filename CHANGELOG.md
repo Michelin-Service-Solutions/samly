@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [Unreleased]
+## [1.0.0] - 2018-11-25
 ### Changed
 - Refactor State interface.
 - State is now a behaviour with ETS and Conn backed implementations.
