@@ -3,7 +3,7 @@ defmodule Samly.Mixfile do
 
   @version "1.1.0"
   @description "SAML SP SSO made easy - Decisiv fork"
-  @source_url "https://github.com/Decisiv/samly"
+  @source_url "https://github.com/Michelin-Service-Solutions/samly"
 
   def project() do
     [
@@ -50,6 +50,7 @@ defmodule Samly.Mixfile do
 
   defp package() do
     [
+      organization: "michelin_service_solutions",
       maintainers: ["handnot2"],
       files: ["config", "lib", "LICENSE", "mix.exs", "README.md"],
       licenses: ["MIT"],
