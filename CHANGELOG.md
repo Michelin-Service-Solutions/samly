@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [1.2.0] - 2020-10-08
+### Changed
+- Cowboy 2.x support
+- Uptake `esaml` v4.0.0 which includes support for Cowboy 2.x.
+
 ## [1.0.0] - 2018-11-25
 ### Changed
 - Refactor State interface.
