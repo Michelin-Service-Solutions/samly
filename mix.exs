@@ -1,7 +1,7 @@
 defmodule Samly.Mixfile do
   use Mix.Project
 
-  @version "1.2.0"
+  @version "1.3.0"
   @description "SAML SP SSO made easy - Decisiv fork"
   @source_url "https://github.com/Michelin-Service-Solutions/samly"
 
