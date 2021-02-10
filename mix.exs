@@ -1,7 +1,7 @@
 defmodule Samly.Mixfile do
   use Mix.Project
 
-  @version "1.1.0"
+  @version "1.2.0"
   @description "SAML SP SSO made easy - Decisiv fork"
   @source_url "https://github.com/Michelin-Service-Solutions/samly"
 
@@ -16,7 +16,12 @@ defmodule Samly.Mixfile do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [coveralls: :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test]
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -30,11 +35,11 @@ defmodule Samly.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps() do
     [
-      {:plug, "~> 1.4"},
-      {:esaml, "~> 3.6"},
-      {:sweet_xml, "~> 0.6"},
-      {:ex_doc, "~> 0.19", only: :dev},
-      {:inch_ex, "~> 0.5", only: :docs},
+      {:plug, "~> 1.6"},
+      {:esaml, "~> 4.2"},
+      {:sweet_xml, "~> 0.6.6"},
+      {:ex_doc, "~> 0.19.0", only: :dev, runtime: false},
+      {:inch_ex, "~> 1.0", only: [:dev, :test]},
       {:excoveralls, "~> 0.10", only: :test}
     ]
   end
