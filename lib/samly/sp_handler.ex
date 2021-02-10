@@ -20,7 +20,10 @@ defmodule Samly.SPHandler do
     |> send_resp(200, metadata)
   end
 
-  def consume_signin_response(conn, state \\ Application.get_env(:samly, :state_provider, State.Ets)) do
+  def consume_signin_response(
+        conn,
+        state \\ Application.get_env(:samly, :state_provider, State.Ets)
+      ) do
     %IdpData{id: idp_id} = idp = conn.private[:samly_idp]
     %IdpData{pre_session_create_pipeline: pipeline, esaml_sp_rec: sp_rec} = idp
     sp = ensure_sp_uris_set(sp_rec, conn)
@@ -129,7 +132,10 @@ defmodule Samly.SPHandler do
   end
 
   # non-ui logout request from IDP
-  def handle_logout_request(conn, state \\ Application.get_env(:samly, :state_provider, State.Ets)) do
+  def handle_logout_request(
+        conn,
+        state \\ Application.get_env(:samly, :state_provider, State.Ets)
+      ) do
     %IdpData{id: idp_id} = idp = conn.private[:samly_idp]
     %IdpData{esaml_idp_rec: idp_rec, esaml_sp_rec: sp_rec} = idp
     sp = ensure_sp_uris_set(sp_rec, conn)
@@ -140,6 +146,7 @@ defmodule Samly.SPHandler do
 
     with {:ok, payload} <- Helper.decode_idp_signout_req(sp, saml_encoding, saml_request) do
       Esaml.esaml_logoutreq(name: nameid, issuer: _issuer) = payload
+
       return_status =
         case state.get(conn, "samly_assertion") do
           {^nameid, %Assertion{idp_id: ^idp_id}} ->
