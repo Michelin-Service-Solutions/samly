@@ -1,7 +1,7 @@
 defmodule Samly.Mixfile do
   use Mix.Project
 
-  @version "1.3.0"
+  @version "1.4.0"
   @description "SAML SP SSO made easy - Decisiv fork"
   @source_url "https://github.com/Michelin-Service-Solutions/samly"
 
@@ -37,10 +37,10 @@ defmodule Samly.Mixfile do
     [
       {:plug, "~> 1.6"},
       {:esaml, "~> 4.2"},
-      {:sweet_xml, "~> 0.6.6"},
+      {:sweet_xml, "~> 0.7"},
       {:ex_doc, "~> 0.19.0", only: :dev, runtime: false},
       {:inch_ex, "~> 1.0", only: [:dev, :test]},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.18", only: :test}
     ]
   end
 
