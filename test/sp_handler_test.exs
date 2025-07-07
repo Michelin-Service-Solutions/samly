@@ -100,7 +100,7 @@ defmodule Samly.SPHandlerTest do
       conn =
         conn
         |> put_private(:samly_idp, idp_data)
-        |> init_test_session(%{"samly_assertion" => {'test@example.com', nil}})
+        |> init_test_session(%{"samly_assertion" => {~c"test@example.com", nil}})
         |> SPHandler.handle_logout_request(State.Conn)
 
       refute get_session(conn, "samly_assertion")
@@ -112,7 +112,7 @@ defmodule Samly.SPHandlerTest do
         conn
         |> put_private(:samly_idp, idp_data)
         |> init_test_session(%{
-          "samly_assertion" => {'test@example.com', %Assertion{idp_id: "test_idp"}}
+          "samly_assertion" => {~c"test@example.com", %Assertion{idp_id: "test_idp"}}
         })
         |> SPHandler.handle_logout_request(State.Conn)
 
