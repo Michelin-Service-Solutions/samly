@@ -2,6 +2,19 @@
 
 SAML 2.0 SP SSO made easy. This is a Plug library that can be used to enable SAML 2.0 Single Sign On authentication in a Plug/Phoenix application.
 
+## Publishing a new version to Hex.pm
+Update the `@version` value in the `mix.exs` file.
+Login with your hex.pm login
+`mix hex.organization auth michelin_service_solutions`
+Run `mix compile` and `mix test` to make sure the code compiles and passes tests
+Perform a dry run to make sure everything look ok
+`mix hex.publish --organization michelin_service_solutions --dry-run`
+Publish the new version
+`mix hex.publish --organization michelin_service_solutions`
+
+
+## samly source docs
+
 [![Inline docs](http://inch-ci.org/github/handnot2/samly.svg)](http://inch-ci.org/github/handnot2/samly)
 
 This library uses Erlang [`esaml`](https://github.com/handnot2/esaml) to provide
