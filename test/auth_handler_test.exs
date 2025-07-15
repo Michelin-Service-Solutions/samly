@@ -5,22 +5,25 @@ defmodule Samly.AuthHandlerTest do
   alias Samly.{Assertion, AuthHandler, IdpData, SpData, State}
 
   setup do
-    idp_config = IdpData.load_provider(
-      %{
-        id: "test_idp",
-        sp_id: "test_sp",
-        base_url: "http://localhost:8080/foo",
-        sign_requests: false,
-        sign_metadata: false,
-        signed_assertion_in_resp: false,
-        signed_envelopes_in_resp: false,
-        metadata_file: "test/data/idp_metadata.xml"
-      },
-      %{"test_sp" => SpData.load_provider(%{id: "test_sp"})}
-    )
+    idp_config =
+      IdpData.load_provider(
+        %{
+          id: "test_idp",
+          sp_id: "test_sp",
+          base_url: "http://localhost:8080/foo",
+          sign_requests: false,
+          sign_metadata: false,
+          signed_assertion_in_resp: false,
+          signed_envelopes_in_resp: false,
+          metadata_file: "test/data/idp_metadata.xml"
+        },
+        %{"test_sp" => SpData.load_provider(%{id: "test_sp"})}
+      )
+
     conn =
       conn(:get, "/?target_url=https://example.com/foo")
       |> init_test_session(%{})
+
     {:ok, conn: conn, idp_config: idp_config}
   end
 
@@ -60,6 +63,7 @@ defmodule Samly.AuthHandlerTest do
       |> fetch_query_params()
       |> put_private(:samly_idp, idp_data)
       |> AuthHandler.send_signout_req(State.Conn)
+
     assert conn.status == 403
   end
 

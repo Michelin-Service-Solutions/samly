@@ -6,8 +6,7 @@ defmodule Samly.State.ConnTest do
   alias Samly.State.Conn, as: ConnState
 
   setup do
-    conn =
-      conn(:get, "/")
+    conn = conn(:get, "/")
     {:ok, conn: conn}
   end
 
@@ -20,6 +19,7 @@ defmodule Samly.State.ConnTest do
       conn
       |> init_test_session(%{})
       |> ConnState.put({"test_assertion", "foo@example.com"}, %Assertion{})
+
     assert {"foo@example.com", %Assertion{}} == ConnState.get(conn, "test_assertion")
   end
 

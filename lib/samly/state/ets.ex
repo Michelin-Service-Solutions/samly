@@ -28,6 +28,7 @@ defmodule Samly.State.Ets do
   @impl true
   def put(conn, {sess_key, key}, saml_assertion) do
     :ets.insert(:esaml_nameids, {key, saml_assertion})
+
     conn
     |> put_session(sess_key, key)
   end
@@ -37,7 +38,9 @@ defmodule Samly.State.Ets do
     table_key =
       conn
       |> get_session(key)
+
     :ets.delete(:esaml_nameids, table_key)
+
     conn
     |> delete_session(key)
   end

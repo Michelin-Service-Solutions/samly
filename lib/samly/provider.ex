@@ -26,7 +26,11 @@ defmodule Samly.Provider do
 
   @doc false
   def start_link(gs_opts \\ []) do
-    GenServer.start_link(__MODULE__, Application.get_env(:samly, :state_provider, State.Ets), gs_opts)
+    GenServer.start_link(
+      __MODULE__,
+      Application.get_env(:samly, :state_provider, State.Ets),
+      gs_opts
+    )
   end
 
   @doc false

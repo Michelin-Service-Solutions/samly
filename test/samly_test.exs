@@ -7,7 +7,8 @@ defmodule SamlyTest do
   setup do
     conn =
       conn(:get, "/")
-      |> init_test_session(%{"samly_assertion" => {'test@example.com', %Assertion{}}})
+      |> init_test_session(%{"samly_assertion" => {~c"test@example.com", %Assertion{}}})
+
     {:ok, conn: conn}
   end
 
@@ -19,6 +20,7 @@ defmodule SamlyTest do
     conn =
       conn
       |> delete_session("samly_assertion")
+
     refute Samly.get_active_assertion(conn, State.Conn)
   end
 end
